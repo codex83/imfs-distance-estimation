@@ -1,0 +1,90 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# Model Checkpoints
+*.pt
+*.pth
+*.ckpt
+model_checkpoints*/
+checkpoints/
+
+# Data
+data/
+datasets/
+*.json
+*.csv
+*.h5
+*.hdf5
+
+# Logs
+logs/
+*.log
+tensorboard_logs/
+
+# Outputs
+outputs/
+results/
+visualizations/
+annotated_images/
+*.mp4
+*.avi
+
+# Allow evaluation plots in docs
+!docs/figures/*.png
+
+# ONNX
+*.onnx
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+argonne-dataset/
+sample_images/
+hybrid-batch-*-output*/
+models-ouputs/
+
+
