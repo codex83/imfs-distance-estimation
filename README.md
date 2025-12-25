@@ -1,26 +1,26 @@
-# 🚗 Intelligent Monocular Forward-Vision System (IMFS)
+# Intelligent Monocular Forward-Vision System (IMFS)
 
 **IMFS** (Intelligent Monocular Forward-Vision System) is a deep learning system for estimating the distance to lead vehicles using a single monocular camera. The system implements a 3-branch neural network architecture that fuses full scene imagery, vehicle patches, and geometric features to achieve accurate distance estimation suitable for real-time deployment.
 
 ---
 
-## 🎯 The Challenge
+## The Challenge
 
 Determining lead vehicle distances is crucial for analyzing driver behavior in autonomous and assisted driving research. However, the high costs associated with LiDAR and RADAR technology pose a significant barrier to many researchers. **Argonne National Laboratory**, one of the U.S. Department of Energy's 17 national labs, needed a cost-effective alternative for their Connected and Automated Vehicle (CAV) research program.
 
-**The Problem:** 💰 How can I provide reliable, real-time distance estimation using only monocular video from common hardware like dashcams—without expensive LiDAR/RADAR systems?
+**The Problem:** How can I provide reliable, real-time distance estimation using only monocular video from common hardware like dashcams—without expensive LiDAR/RADAR systems?
 
-**The Opportunity:** ✨ Create an accessible and scalable solution that delivers accurate distance estimation using deep learning and geometric features, enabling widespread adoption in driver behavior research.
+**The Opportunity:** Create an accessible and scalable solution that delivers accurate distance estimation using deep learning and geometric features, enabling widespread adoption in driver behavior research.
 
 ---
 
-## 💡 My Solution: A Hybrid 3-Branch Architecture
+## My Solution: A Hybrid 3-Branch Architecture
 
 I designed a novel hybrid approach that combines the power of deep learning with geometric priors. Unlike traditional monocular depth estimation, my architecture fuses three complementary information sources:
 
-1. **🖼️ Full Scene Understanding** - Processes the entire image to capture contextual information
-2. **🚙 Vehicle-Specific Features** - Focuses on the detected lead vehicle patch
-3. **📐 Geometric Priors** - Leverages 10 calibrated features from camera parameters and bounding box geometry
+1. **Full Scene Understanding** - Processes the entire image to capture contextual information
+2. **Vehicle-Specific Features** - Focuses on the detected lead vehicle patch
+3. **Geometric Priors** - Leverages 10 calibrated features from camera parameters and bounding box geometry
 
 ![Model Architecture](docs/figures/model_architecture.png)
 
@@ -28,51 +28,51 @@ This 3-branch fusion enables robust distance estimation that rivals expensive se
 
 ---
 
-## 🛣️ The Journey: From Data to Deployment
+## The Journey: From Data to Deployment
 
-### 📊 Understanding the Data
+### Understanding the Data
 
 I worked with the **Argonne National Laboratory dataset**—a PII-filtered, proprietary collection of **19,000+ real-world dashcam images** from LA, Nashville, and Chattanooga. Ground truth distances were synchronized from LiDAR and Radar sensors, providing accurate labels for training.
 
 ![Data Distribution](docs/figures/data_distribution.png)
 
 **Key Insights:**
-- 📍 Heavy concentration in 0-30m range (typical city driving)
-- ⚠️ Critical safety range underrepresented (only 4.8% under 2m)
-- 🔭 Long-range samples (>40m) are limited—presenting challenges for far-distance estimation
+- Heavy concentration in 0-30m range (typical city driving)
+- Critical safety range underrepresented (only 4.8% under 2m)
+- Long-range samples (>40m) are limited—presenting challenges for far-distance estimation
 
 This distribution shaped my model design, emphasizing accuracy in the most common distance ranges while maintaining performance across the full spectrum.
 
-### 🔧 Preprocessing: Making Images Model-Ready
+### Preprocessing: Making Images Model-Ready
 
 Raw dashcam images present numerous challenges: lens distortion, varying lighting conditions, and inconsistent contrast. I developed a comprehensive preprocessing pipeline to address these issues:
 
 ![Preprocessing Pipeline](docs/figures/model_preprocessing.png)
 
 **The Pipeline:**
-1. **🔍 Lens Undistortion** - Corrects barrel/pincushion distortion using camera calibration
-2. **🎨 White Balance** - Fixes color cast from different lighting conditions
-3. **✨ CLAHE** - Enhances local contrast while preventing over-amplification
-4. **💡 Gamma Correction** - Non-linear brightness adjustment for better shadow detail
+1. **Lens Undistortion** - Corrects barrel/pincushion distortion using camera calibration
+2. **White Balance** - Fixes color cast from different lighting conditions
+3. **CLAHE** - Enhances local contrast while preventing over-amplification
+4. **Gamma Correction** - Non-linear brightness adjustment for better shadow detail
 
 ![Lens Distortion Correction](docs/figures/lens_distortion_correction.png)
 ![Lens Distortion with Grid](docs/figures/lens_distortion_correction_with_grid_visualization.png)
 
-### 🎯 Finding the Lead Vehicle
+### Finding the Lead Vehicle
 
 With multiple vehicles in each frame, identifying the correct lead vehicle is crucial. I developed a multi-stage detection system:
 
 ![Lead Vehicle Detection](docs/figures/lead_vehicle_detection.png)
 
 **My Approach:**
-1. **📍 ROI Polygon Filtering** - Restricts detection to the drivable area
-2. **🤖 YOLOv8 Detection** - Real-time vehicle detection with accurate bounding boxes
-3. **🧮 Smart Scoring** - Combines closeness (70%), size (20%), and alignment (10%) to select the best candidate
-4. **✂️ Hood Exclusion** - Removes bottom 20% (training) or 9% (inference) to avoid false detections
+1. **ROI Polygon Filtering** - Restricts detection to the drivable area
+2. **YOLOv8 Detection** - Real-time vehicle detection with accurate bounding boxes
+3. **Smart Scoring** - Combines closeness (70%), size (20%), and alignment (10%) to select the best candidate
+4. **Hood Exclusion** - Removes bottom 20% (training) or 9% (inference) to avoid false detections
 
 This multi-stage approach ensures the system consistently identifies the primary lead vehicle, even in complex traffic scenarios.
 
-### 🔄 Data Augmentation: Building Robustness
+### Data Augmentation: Building Robustness
 
 ![Data Augmentation](docs/figures/data_augmentation.png)
 
@@ -80,17 +80,17 @@ To improve model generalization, I applied data augmentation techniques that sim
 
 ---
 
-## 🤖 The Models: Two Paths to Success
+## The Models: Two Paths to Success
 
 I developed two model variants, each optimized for different use cases:
 
-### 💪 Heavyweight Model - Production-Ready Accuracy
+### Heavyweight Model - Production-Ready Accuracy
 
 - **Architecture:** EfficientNetB4 (full image) + EfficientNetB3 (car patch) + Geometric features
 - **Performance:** 1.41m MAE, 104ms latency, 9.7 FPS
 - **Use Case:** Offline analysis, research, and scenarios where accuracy is prioritized
 
-### ⚡ Lightweight Model - Real-Time Edge Deployment
+### Lightweight Model - Real-Time Edge Deployment
 
 - **Architecture:** MobileNetV3-Small (full image) + Custom CNN (car patch) + Geometric features
 - **Performance:** 1.68m MAE, 32ms latency, 31+ FPS
@@ -99,13 +99,13 @@ I developed two model variants, each optimized for different use cases:
 ![Model Comparison](docs/figures/model_comparision.png)
 
 **Key Achievement:** Both models exceeded my target metrics:
-- ✅ **Latency:** 32ms (68% faster than 100ms target)
-- ✅ **Model Size:** ~4.2 MB (96% smaller than 100 MB target)
-- ✅ **Accuracy:** 1.68m MAE (16% better than 2.00m target)
+- **Latency:** 32ms (68% faster than 100ms target)
+- **Model Size:** ~4.2 MB (96% smaller than 100 MB target)
+- **Accuracy:** 1.68m MAE (16% better than 2.00m target)
 
 ---
 
-## 📈 Results: Exceeding Expectations
+## Results: Exceeding Expectations
 
 My comprehensive evaluation revealed that the lightweight model not only met but exceeded all performance targets while maintaining competitive accuracy:
 
@@ -138,9 +138,9 @@ My comprehensive evaluation revealed that the lightweight model not only met but
 
 ---
 
-## 🏗️ Technical Architecture
+## Technical Architecture
 
-### 🔬 Model Architecture Details
+### Model Architecture Details
 
 **Heavyweight Model:**
 - **Branch 1**: EfficientNetB4 (1792 features) → 512 → 256 → 128-dim head
@@ -156,7 +156,7 @@ My comprehensive evaluation revealed that the lightweight model not only met but
 - **Fusion**: 656-dim → 128 → 64 → 1
 - **Parameters**: ~1.08M total
 
-### 🔧 Preprocessing Pipeline
+### Preprocessing Pipeline
 
 The preprocessing pipeline consists of four stages applied sequentially:
 
@@ -177,7 +177,7 @@ The preprocessing pipeline consists of four stages applied sequentially:
    - Brightens shadows and mid-tones more than highlights
    - Prevents overexposure in bright areas
 
-### 🎯 Lead Vehicle Detection
+### Lead Vehicle Detection
 
 The system employs a multi-stage approach to identify and select the primary lead vehicle:
 
@@ -208,9 +208,9 @@ The system employs a multi-stage approach to identify and select the primary lea
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 📦 Installation
+### Installation
 
 1. Clone the repository:
 ```bash
@@ -233,21 +233,21 @@ pip install -r requirements.txt
    - Edit `src/config.py` with your camera parameters
    - Camera calibration can be performed using OpenCV's calibration tools
 
-### 🤖 Pretrained Models
+### Pretrained Models
 
 Pretrained model checkpoints are available for both the Heavyweight and Lightweight models. These models were trained on the Argonne National Laboratory dataset.
 
 **Model Availability:**
-- **⚡ Lightweight Model**: Available upon request (recommended for real-time inference)
-- **💪 Heavyweight Model**: Available upon request (recommended for offline analysis)
+- **Lightweight Model**: Available upon request (recommended for real-time inference)
+- **Heavyweight Model**: Available upon request (recommended for offline analysis)
 
 **Request Access:** Please contact [htj8@outlook.com](mailto:htj8@outlook.com) to request access to pretrained model checkpoints.
 
 **Note:** Model checkpoints are not included in this repository due to size constraints. Alternatively, you can train the models from scratch using the training scripts provided below.
 
-### 💻 Usage
+### Usage
 
-#### 🎓 Training
+#### Training
 
 **Train Heavyweight Model:**
 ```bash
@@ -273,7 +273,7 @@ python scripts/train_lightweight.py \
     --batch-size 64
 ```
 
-#### 📊 Evaluation
+#### Evaluation
 
 **Compare Both Models:**
 ```bash
@@ -285,7 +285,7 @@ python scripts/evaluate.py \
     --test-image-dir /path/to/test/images
 ```
 
-#### 🔮 Inference
+#### Inference
 
 **Single Image:**
 ```bash
@@ -318,7 +318,7 @@ python scripts/inference_image.py \
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 .
@@ -337,7 +337,7 @@ python scripts/inference_image.py \
 
 ---
 
-## 🌟 Impact & Future Work
+## Impact & Future Work
 
 **IMFS** successfully demonstrates that monocular vision can provide accurate, real-time distance estimation suitable for driver behavior research. By achieving **31+ FPS** on standard hardware with **1.68m MAE**, I've created a viable alternative to expensive sensor-based systems.
 
@@ -345,18 +345,24 @@ python scripts/inference_image.py \
 > "We are very thankful to the team for adding this capability to our research toolkit."
 
 The lightweight model's real-time performance opens possibilities for:
-- 📊 Real-time driver behavior analysis
-- 📱 Edge device deployment
-- 🌐 Mobile/web application integration
-- 💰 Cost-effective research platforms
+- Real-time driver behavior analysis
+- Edge device deployment
+- Mobile/web application integration
+- Cost-effective research platforms
 
 ---
 
-## 🙏 Acknowledgments
+## License
 
-- **🏛️ Argonne National Laboratory** - Dataset and research collaboration
-  - Kevin Stutenberg (Project Lead)
-  - Michael Pamminger (Technical Research)
-  - Yihe Chen (Technical Implementation)
-- **🎓 University of Chicago** - Research support and academic guidance
+Copyright (c) 2024 Hritik Jhaveri. All Rights Reserved.
+
+This project and its associated code, documentation, models, and related materials are proprietary and confidential. Unauthorized copying, distribution, modification, or use of this project, in whole or in part, is strictly prohibited without prior written permission from the copyright owner.
+
+**For licensing inquiries, collaboration requests, or access to pretrained models, please contact:** [htj8@outlook.com](mailto:htj8@outlook.com)
+
+**Terms:**
+- This repository is provided for reference and educational purposes only
+- Any use, reproduction, or distribution requires explicit written permission
+- Commercial use is strictly prohibited without a license agreement
+- The copyright owner reserves all rights not expressly granted
 
